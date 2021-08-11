@@ -25,5 +25,25 @@ namespace SQLite_Tutorial
         {
             return _db.InsertAsync(person);
         }
+
+        public Task<int> UpdatePersonAsync(Person person)
+        {
+            return _db.UpdateAsync(person);
+        }
+
+        public Task<int> DeletePersonAsync(Person person)
+        {
+            return _db.DeleteAsync(person);
+        }
+
+        public Task<List<Person>> QuerySubscribedAsync()
+        {
+            return _db.QueryAsync<Person>("SELECT * FROM Person WHERE Subscribed = true");
+        }
+
+        public Task<List<Person>> LinqNotSubscribed()
+        {
+            return _db.Table<Person>().Where(p => p.Subscribed == false).ToListAsync();
+        }
     }
 }

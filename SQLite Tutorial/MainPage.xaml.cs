@@ -36,5 +36,48 @@ namespace SQLite_Tutorial
                 collectionView.ItemsSource = await App.Database.GetPeopleAsync();
             }
         }
+
+        Person lastSelection;
+        private void collectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            lastSelection = e.CurrentSelection[0] as Person;
+            nameEntry.Text = lastSelection.Name;
+            subscribed.IsChecked = lastSelection.Subscribed;
+        }
+
+        private async void Button_Clicked(object sender, EventArgs e)
+        {
+            if (lastSelection != null)
+            {
+                lastSelection.Name = nameEntry.Text;
+                lastSelection.Subscribed = subscribed.IsChecked;
+
+                await App.Database.UpdatePersonAsync(lastSelection);
+                collectionView.ItemsSource = await App.Database.GetPeopleAsync();
+            }
+        }
+
+        private async void Button_Clicked_1(object sender, EventArgs e)
+        {
+            if (lastSelection != null)
+            {
+                await App.Database.DeletePersonAsync(lastSelection);
+                collectionView.ItemsSource = await App.Database.GetPeopleAsync();
+
+                nameEntry.Text = "";
+                subscribed.IsChecked = false;
+            }
+        }
+
+        //Get subscribed
+        private async void Button_Clicked_2(object sender, EventArgs e)
+        {
+            collectionView.ItemsSource = await App.Database.QuerySubscribedAsync();
+        }
+
+        private async void Button_Clicked_3(object sender, EventArgs e)
+        {
+            collectionView.ItemsSource = await App.Database.LinqNotSubscribed();
+        }
     }
 }
